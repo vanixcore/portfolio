@@ -297,3 +297,39 @@ button:hover {
     background: var(--accent); 
     box-shadow: 0 0 20px rgba(163, 230, 53, 0.6);
 }
+@media (max-width: 600px) {
+    header, .navbar {
+        flex-direction: column !important;
+        padding: 1rem !important;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap; 
+        gap: 15px;
+    }
+    .hero h1 {
+        font-size: 1.8rem !important; 
+        word-break: break-word;
+    }
+    .footer {
+        flex-direction: column !important;
+        gap: 2rem !important;
+        padding: 2rem 1rem !important;
+        width: 100% !important;
+    }
+
+    .footer-buttons, .footer-links {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+    body, html {
+        overflow-x: hidden !important;
+        position: relative;
+    }
+}
