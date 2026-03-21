@@ -1,0 +1,299 @@
+:root {
+    --bg: #0a0a0a;
+    --card-bg: #111111;
+    --accent: #a3e635; 
+    --accent-alt:#a855f7;
+    --text: #ffffff;
+    --border: #888888;
+    --mono: 'Courier New', monospace;
+}
+
+body {
+    background-color: var(--bg);
+    background-image: linear-gradient(rgba(38,38,38,0.5) 1px, transparent 1px),linear-gradient(90deg, rgba(38,38,38,0.5) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-color: #050505;
+    color: var(--text);
+    font-family: var(--mono);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    background: #000;
+    border-bottom: 2px solid var(--accent); 
+}
+
+.status-indicator {
+    color: var(--accent);
+    animation: pulse 2s infinite;
+}
+
+.hero { padding: 4rem 0; }
+h1 { font-size: 4rem; margin: 0; letter-spacing: -2px; }
+.subtitle { color: var(--accent-alt); margin-top: 0; }
+.manifesto { margin-top: 2rem; opacity: 0.7; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    transition: 0.3s;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+.stealth { border-style: dashed; background: #000; }
+
+.progress-container {
+    height: 4px;
+    background: var(--border);
+    margin: 1.5rem 0 0.5rem;
+}
+
+.progress-bar {
+    width: 75%;
+    height: 100%;
+    background: var(--accent);
+}
+
+.waitlist-section {
+    margin-top: 4rem;
+    padding: 2rem;
+    border: 1px solid var(--accent);
+    text-align: center;
+}
+
+input {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.8rem;
+    width: 250px;
+    font-family: var(--mono);
+}
+
+button {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+.footer-link{
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: 0.2s;
+    margin: 0 0.5rem;
+}
+.footer-link{
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+}
+.status-msg{
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-top: 0.5rem;
+}
+h1 {
+    font-size: 4.5rem;
+    font-weight: 900; 
+    letter-spacing: -3px; 
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 0;
+    font-family: 'Segoe UI Mono', 'Roboto Mono', 'Cascadia Code', monospace; 
+}
+
+.glitch-text {
+    text-shadow: 0 0 10px rgba(163, 230, 53, 0.2); 
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-top: 0.5rem;
+    color: var(--accent);
+}
+h1::after {
+    content: '_';
+    animation: blink 1s infinite;
+    color: var(--accent);
+}
+.log-box p {
+    transform: translateX(-10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+@keyframes success-glow {
+    0% { box-shadow: 0 0 0px var(--accent); }
+    50% { box-shadow: 0 0 20px var(--accent); }
+    100% { box-shadow: 0 0 0px var(--accent); }
+}
+
+.success-pulse {
+    animation: success-glow 1s ease-in-out;
+}
+
+.card-links {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
+.btn-link {
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-transform: uppercase;
+    transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    background: rgba(163, 230, 53, 0.05);
+}
+
+.btn-link:hover {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 0 15px var(--accent);
+    transform: translateY(-2px);
+}
+
+.btn-link.secondary {
+    border-color: var(--accent-alt);
+    color: var(--accent-alt);
+    background: transparent;
+    opacity: 0.6;
+}
+
+.btn-link.secondary:hover {
+    opacity: 1;
+    background: var(--accent-alt);
+    color: #000;
+}
+.card {
+    background: rgba(20,20,20,0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden; 
+}
+.card:hover{
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(163, 230, 53, 0.1);
+    transform: translate(-5px);
+}
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.card.stealth::before {
+    background: linear-gradient(90deg, #ff3e3e, transparent); 
+}
+.footer-system {
+    margin-top: 5rem;
+    padding: 3rem 0;
+    background: #000;
+    border-top: 1px solid rgba(163, 230, 53, 0.2); 
+}
+
+.footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.sys-btn {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-left: 1rem;
+    transition: 0.3s;
+}
+
+.sys-btn:hover {
+    background: var(--accent);
+    color: #000;
+}
+body::before{
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 80% 20%, rgba(168,85,247,0.05), transparent 40%);
+    pointer-events: none;
+    z-index: -1;
+}
+.sys-btn, .btn-link.secondary, button {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.sys-btn:hover, .btn-link.secondary:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+}
+button {
+    background: #ffffff;
+    color: #000;
+}
+
+button:hover {
+    background: var(--accent); 
+    box-shadow: 0 0 20px rgba(163, 230, 53, 0.6);
+}

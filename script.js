@@ -1,0 +1,120 @@
+/*global supabase*/
+const supabaseUrl = 'https://sggfrwruezxdakvzwynr.supabase.co';
+const supabaseKey = 'sb_publishable_Dor8s13toQMbbOk0VGWnJw_c01DyfeY';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+async function loadProjects() {
+    const grid = document.querySelector('.grid');
+    console.log("> INITIALIZING_PROJECT_FETCH...");
+
+    const { data: projects, error } = await _supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error("> ERROR: PROJECT_LOAD_FAILED", error.message);
+        return;
+    }
+
+    grid.innerHTML = '';
+
+    projects.forEach(project => {
+        const card = document.createElement('div');
+        card.className = `card ${project.is_stealth ? 'stealth' : ''}`;
+        
+        card.innerHTML = `
+            <div class="card-header">
+                <span class="tag">${project.is_stealth ? 'PROJECT_ALPHA' : 'ENGINE'}</span>
+                <span class="tech">${project.tech_stack ? project.tech_stack.join(' // ') : 'VANILLA_JS'}</span>
+            </div>
+            <h3>${project.title}</h3>
+            <p>${project.description}</p>
+            
+            ${project.is_stealth ? `
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 75%"></div>
+                </div>
+                <p class="status-msg">> INITIALIZING_CORE_NODES...</p>
+            ` : ''}
+
+            <div class="card-links">
+                ${project.demo_url ? `<a href="${project.demo_url}" target="_blank" class="btn-link">EXECUTE_DEMO →</a>` : ''}
+                ${project.github_url ? `<a href="${project.github_url}" target="_blank" class="btn-link secondary">SOURCE_CODE</a>` : ''}
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    console.log("> SYSTEMS_READY: PROJECTS_RENDERED");
+    initCodifyHover();
+}
+const waitlistForm = document.querySelector('#waitlist-form');
+const statusDisplay = document.querySelector('.waitlist-section p');
+
+if (waitlistForm) {
+    waitlistForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const emailInput = waitlistForm.querySelector('input[type="email"]');
+        const submitBtn = waitlistForm.querySelector('button');
+
+        submitBtn.innerText = "UPLOADING...";
+        submitBtn.disabled = true;
+
+        const { error } = await _supabase
+            .from('waitlist')
+            .insert([{ email: emailInput.value, source: 'portfolio_v1' }]);
+
+        if (error) {
+            statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
+            statusDisplay.style.color = "#ff3e3e";
+        } else {
+            statusDisplay.innerText = "> SUCCESS: ACCESS_GRANTED. WELCOME TO THE NETWORK.";
+            statusDisplay.style.color = "var(--accent)";
+            emailInput.value = '';
+            document.querySelector('.waitlist-section').classList.add('success-pulse');
+            statusDisplay.innerHTML=`<span style = "color : var(--accent)">> SIGNAL_RECEIVED.</span><br>
+            <span style = "color : #ffffff">>ACCESS_KEY_PENDING...</span><br>
+            <<span styl e= "font-size : 0.6rem; opacity : 0.6;">Welcome to the Vani Jha infrastruture.</span>
+            `;
+            waitlistForm.style.opacity = "0.5";
+            waitlistForm.style.pointerEvents = "none";
+        }
+
+        submitBtn.innerText = "STRIKE_KEY";
+        submitBtn.disabled = false;
+    });
+}
+function runSystemLog() {
+    const logLines = document.querySelectorAll('.log-box p');
+    logLines.forEach((line, index) => {
+        line.style.opacity = '0';
+        line.style.transform = 'translateX(-10px)';
+        setTimeout(() => {
+            line.style.opacity = '1';
+            line.style.transform = 'translateX(0)';
+            line.style.transition = 'all 0.4s ease';
+        }, 200 * index); 
+    });
+}
+
+function initCodifyHover() {
+    const codifyCard = document.querySelector('.stealth');
+    const progressBar = document.querySelector('.stealth .progress-bar');
+
+    if (codifyCard && progressBar) {
+        codifyCard.addEventListener('mouseenter', () => {
+            progressBar.style.width = '98%'; 
+            progressBar.style.transition = 'width 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
+        });
+        
+        codifyCard.addEventListener('mouseleave', () => {
+            progressBar.style.width = '75%';
+            progressBar.style.transition = 'width 0.5s ease';
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadProjects();
+    runSystemLog();
+});
