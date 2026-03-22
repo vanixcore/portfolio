@@ -416,11 +416,11 @@ button:hover {
     .footer-links a {
         display: block;
         width: 100% !important;
-        max-width: 190px !important; 
+        max-width: 196px !important; 
         padding: 8px 0 !important;  
         border: 1px solid #222 !important; 
         color: #888 !important;      
-        font-size: 0.65rem !important;
+        font-size: 0.7rem !important;
         letter-spacing: 2px;
         text-decoration: none;
         text-transform: uppercase;
@@ -438,7 +438,7 @@ button:hover {
         align-items: center !important;
         width: 100% !important;
         padding: 0 15px !important; 
-        font-size: 0.65rem !important;
+        font-size: 0.69rem !important;
         letter-spacing: 1px;
         color: #666; 
     }
@@ -465,7 +465,7 @@ button:hover {
         display: block !important;
         width: 100% !important;
         order: 2; 
-        font-size: 0.68rem !important;
+        font-size: 0.7rem !important;
         color: #555 !important;
         letter-spacing: 2px;
         margin-top: 10px;
