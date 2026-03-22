@@ -370,23 +370,29 @@ button:hover {
         flex-direction: row !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 10px 10px !important; 
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-
-    .status-indicator {
-        white-space: nowrap !important;
-        flex-shrink: 0 !important; 
-        display: flex !important;
-        align-items: center !important;
-        gap: 5px;
-        text-align: right !important;
+        width: 100vw !important; 
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 10px 15px !important;
+        box-sizing: border-box !important;
+        overflow: hidden;
     }
 
     .logo {
-        flex-shrink: 1; 
-        font-size: 0.7rem !important; 
+        flex: 1; 
+        text-align: left;
+        font-size: 0.7rem !important;
+    }
+
+    .status-indicator {
+        flex: 1; 
+        display: flex !important;
+        justify-content: flex-end !important; 
+        align-items: center;
+        text-align: right !important;
+        white-space: nowrap !important; 
+        font-size: 0.7rem !important;
+        min-width: fit-content; 
     }
 }
 
