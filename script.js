@@ -2,6 +2,24 @@
 const supabaseUrl = 'https://sggfrwruezxdakvzwynr.supabase.co';
 const supabaseKey = 'sb_publishable_Dor8s13toQMbbOk0VGWnJw_c01DyfeY';
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+async function checkSystemStatus() {
+    const statusDot = document.querySelector('.status-dot');
+    const statusText = document.getElementById('db-status');
+
+    try {
+        const { data, error } = await supabase.from('projects').select('count', { count: 'exact', head: true });
+        if (!error) {
+            statusDot.classList.add('online');
+            statusText.innerText = 'ONLINE';
+            statusText.style.color = '#00ff41';
+        }
+    } catch (e) {
+        statusText.innerText = 'OFFLINE';
+    }
+}
+
+checkSystemStatus();
+
 async function loadProjects() {
     const grid = document.querySelector('.grid');
     if (!grid) return;
