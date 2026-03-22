@@ -405,31 +405,6 @@ button:hover {
         align-items: center;
         gap: 15px;
     }
-    #waitlist-form input {
-        width: 100% !important;
-        max-width: 240px !important; 
-        height: 38px !important;     
-        background: transparent !important;
-        border: 1px solid #333 !important; 
-        color: #2ecc71;
-        font-size: 0.7rem !important;
-        letter-spacing: 1px;
-        text-align: center;
-        border-radius: 0; 
-    }
-    #waitlist-form button {
-        width: 100% !important;
-        max-width: 240px !important;
-        height: 40px !important;
-        background: #fff !important;
-        color: #000 !important;
-        border: none;
-        font-size: 0.7rem !important;
-        font-weight: 700;
-        letter-spacing: 3px; 
-        text-transform: uppercase;
-        cursor: pointer;
-    }
     .footer-links {
         display: flex;
         flex-direction: column;
@@ -437,26 +412,6 @@ button:hover {
         gap: 10px;
         margin-top: 20px;
     }
-
-    .footer-links a {
-        display: block;
-        width: 100% !important;
-        max-width: 220px !important; 
-        padding: 8px 0 !important;   
-        border: 1px solid #222 !important; 
-        color: #888 !important;    
-        font-size: 0.65rem !important;
-        letter-spacing: 2px;
-        text-decoration: none;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-    }
-
-    .footer-links a:hover {
-        border-color: #2ecc71;
-        color: #fff !important;
-    }
-
     .footer-brand {
         font-size: 0.6rem !important;
         opacity: 0.5;
