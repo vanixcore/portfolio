@@ -416,7 +416,7 @@ button:hover {
     .footer-links a {
         display: block;
         width: 100% !important;
-        max-width: 150px !important; 
+        max-width: 180px !important; 
         padding: 8px 0 !important;  
         border: 1px solid #222 !important; 
         color: #888 !important;      
@@ -438,4 +438,5 @@ button:hover {
         margin-bottom: 20px;
     }
 }
+
 
