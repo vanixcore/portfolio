@@ -86,7 +86,7 @@ if (waitlistForm) {
                 statusDisplay.innerHTML = `
                     <span style="color: var(--accent)">> SIGNAL_RECEIVED.</span><br>
                     <span style="color: #ffffff">> ACCESS_KEY_PENDING...</span><br>
-                    <span style="font-size: 0.75rem; opacity: 0.6; display: block; margin-top: 10px;">
+                    <span style="font-size: 0.8rem; opacity: 0.6; display: block; margin-top: 10px;">
                         Welcome to the Vani Jha infrastructure.
                     </span>
                 `;
