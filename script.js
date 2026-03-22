@@ -4,6 +4,8 @@ const supabaseKey = 'sb_publishable_Dor8s13toQMbbOk0VGWnJw_c01DyfeY';
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 async function loadProjects() {
     const grid = document.querySelector('.grid');
+    if (!grid) return;
+
     console.log("> INITIALIZING_PROJECT_FETCH...");
 
     const { data: projects, error } = await _supabase
@@ -13,6 +15,7 @@ async function loadProjects() {
 
     if (error) {
         console.error("> ERROR: PROJECT_LOAD_FAILED", error.message);
+        grid.innerHTML = '<p style="color: #ff3e3e">> ERROR: OFFLINE_MODE_ACTIVE</p>';
         return;
     }
 
@@ -54,34 +57,52 @@ const statusDisplay = document.querySelector('.waitlist-section p');
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
         const emailInput = waitlistForm.querySelector('input[type="email"]');
         const submitBtn = waitlistForm.querySelector('button');
-
+        if (!emailInput.value || !emailInput.value.includes('@')) {
+            statusDisplay.innerText = "> ERROR: SIGNAL_INVALID";
+            statusDisplay.style.color = "#ff3e3e";
+            return;
+        }
         submitBtn.innerText = "UPLOADING...";
         submitBtn.disabled = true;
+        statusDisplay.innerText = "> ATTEMPTING_HANDSHAKE...";
+        statusDisplay.style.color = "#ffffff";
 
-        const { error } = await _supabase
-            .from('waitlist')
-            .insert([{ email: emailInput.value, source: 'portfolio_v1' }]);
+        try {
+            const { error } = await _supabase
+                .from('waitlist')
+                .insert([{ 
+                    email: emailInput.value, 
+                    source: 'portfolio_v1' 
+                }]);
 
-        if (error) {
-            statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
+            if (error) {
+                statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
+                statusDisplay.style.color = "#ff3e3e";
+                console.error("DB_ERROR:", error.message);
+            } else {
+                statusDisplay.innerHTML = `
+                    <span style="color: var(--accent)">> SIGNAL_RECEIVED.</span><br>
+                    <span style="color: #ffffff">> ACCESS_KEY_PENDING...</span><br>
+                    <span style="font-size: 0.6rem; opacity: 0.6; display: block; margin-top: 10px;">
+                        Welcome to the Vani Jha infrastructure.
+                    </span>
+                `;
+                statusDisplay.style.color = "var(--accent)";
+                document.querySelector('.waitlist-section').classList.add('success-pulse');
+                waitlistForm.style.opacity = "0.3";
+                waitlistForm.style.pointerEvents = "none";
+                emailInput.value = '';
+            }
+        } catch (err) {
+            statusDisplay.innerText = "> ERROR: UNKNOWN_SYSTEM_FAILURE";
             statusDisplay.style.color = "#ff3e3e";
-        } else {
-            statusDisplay.innerText = "> SUCCESS: ACCESS_GRANTED. WELCOME TO THE NETWORK.";
-            statusDisplay.style.color = "var(--accent)";
-            emailInput.value = '';
-            document.querySelector('.waitlist-section').classList.add('success-pulse');
-            statusDisplay.innerHTML=`<span style = "color : var(--accent)">> SIGNAL_RECEIVED.</span><br>
-            <span style = "color : #ffffff">>ACCESS_KEY_PENDING...</span><br>
-            <<span styl e= "font-size : 0.6rem; opacity : 0.6;">Welcome to the Vani Jha infrastruture.</span>
-            `;
-            waitlistForm.style.opacity = "0.5";
-            waitlistForm.style.pointerEvents = "none";
+        } finally {
+            submitBtn.innerText = "STRIKE_KEY";
+            submitBtn.disabled = false;
         }
-
-        submitBtn.innerText = "STRIKE_KEY";
-        submitBtn.disabled = false;
     });
 }
 function runSystemLog() {
@@ -113,7 +134,6 @@ function initCodifyHover() {
         });
     }
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     runSystemLog();
