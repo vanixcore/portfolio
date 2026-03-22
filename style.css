@@ -446,6 +446,34 @@ button:hover {
         display: inline-block !important;
         white-space: nowrap !important;
     }
+    .footer-content {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 2rem !important; 
+    }
+    .footer-links {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        align-items: center !important;
+        gap: 12px !important;
+        order: 1; 
+    }
+    .footer-brand {
+        display: block !important;
+        width: 100% !important;
+        order: 2; 
+        font-size: 0.68rem !important;
+        color: #555 !important;
+        letter-spacing: 2px;
+        margin-top: 10px;
+    }
+    .footer-brand span {
+        display: inline-block;
+        margin: 0 5px;
+    }
 }
 
 
