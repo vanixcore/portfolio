@@ -7,7 +7,7 @@ const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
     const statusText = document.getElementById('db-status');
 
     try {
-        const { data, error } = await supabase.from('projects').select('count', { count: 'exact', head: true });
+        const { data, error } = await _supabase.from('projects').select('count', { count: 'exact', head: true });
         if (!error) {
             statusDot.classList.add('online');
             statusText.innerText = 'ONLINE';
