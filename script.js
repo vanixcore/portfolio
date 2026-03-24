@@ -87,42 +87,41 @@ if (waitlistForm) {
         submitBtn.disabled = true;
         statusDisplay.innerText = "> ATTEMPTING_HANDSHAKE...";
         statusDisplay.style.color = "#ffffff";
-
         try {
-            const { error } = await _supabase
-                .from('waitlist')
-                .insert([{ 
-                    email: emailValue, 
-                    source: 'portfolio_v1' 
-                }])
-                .select(); 
+    const emailValue = emailInput.value.trim();
 
-            if (error) {
-                if (error.code === '23505') {
-                    statusDisplay.innerText = "> ERROR: SIGNAL_ALREADY_STORED";
-                } else {
-                    statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
-                    console.error("DB_ERROR:", error.message, error.hint);
-                }
-                statusDisplay.style.color = "#ff3e3e";
-            } else {
-                statusDisplay.innerHTML = `
-                    <span style="color: #00ff41">> SIGNAL_RECEIVED.</span><br>
-                    <span style="color: #ffffff">> ACCESS_KEY_PENDING...</span><br>
-                    <span style="font-size: 0.8rem; opacity: 0.6; display: block; margin-top: 10px;">
-                        Welcome to the Vani Jha infrastructure.
-                    </span>
-                `;
-                document.querySelector('.waitlist-section').classList.add('success-pulse');
-                waitlistForm.style.opacity = "0.3";
-                waitlistForm.style.pointerEvents = "none";
-                emailInput.value = '';
+    const { error } = await _supabase
+        .from('waitlist')
+        .insert([
+            { 
+                email: emailValue, 
+                source: 'portfolio_v1' 
             }
-        } catch (err) {
-            console.error("CATCH_ERROR:", err);
-            statusDisplay.innerText = "> ERROR: UNKNOWN_SYSTEM_FAILURE";
-            statusDisplay.style.color = "#ff3e3e";
-        } finally {
+        ]);
+
+    if (error) {
+        console.error("> DB_ERROR:", error.message);
+        if (error.message.includes('unique') || error.code === '23505') {
+            statusDisplay.innerText = "> ERROR: SIGNAL_ALREADY_STORED";
+        } else {
+            statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
+        }
+        statusDisplay.style.color = "#ff3e3e";
+    } else {
+        
+        statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
+        statusDisplay.style.color = "#00ff41";
+        document.querySelector('.waitlist-section').classList.add('success-pulse');
+        waitlistForm.style.opacity = "0.3";
+        waitlistForm.style.pointerEvents = "none";
+        emailInput.value = '';
+    }
+} catch (err) {
+    console.error("> SYSTEM_FAULT:", err);
+    statusDisplay.innerText = "> ERROR: UNKNOWN_FAULT";
+}
+ 
+        finally {
             submitBtn.innerText = "STRIKE_KEY";
             submitBtn.disabled = false;
         }
