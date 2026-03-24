@@ -1,6 +1,6 @@
 /*global supabase*/
 const supabaseUrl = 'https://sggfrwruezxdakvzwynr.supabase.co';
-const supabaseKey = 'sb_publishable_Dor8s13toQMbbOk0VGWnJw_c01DyfeY';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnZ2Zyd3J1ZXp4ZGFrdnp3eW5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwOTg0NjksImV4cCI6MjA4OTY3NDQ2OX0.oO8VWjke87NfTqQf2z834oE-DRS4QCsMx3Z9vUZ1Rlo';
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
  async function checkSystemStatus() {
     const statusDot = document.querySelector('.status-dot');
