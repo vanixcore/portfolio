@@ -70,7 +70,6 @@ async function loadProjects() {
 }
 const waitlistForm = document.querySelector('#waitlist-form');
 const statusDisplay = document.querySelector('.waitlist-section p');
-
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -82,53 +81,48 @@ if (waitlistForm) {
         submitBtn.innerText = "UPLOADING...";
         submitBtn.disabled = true;
         statusDisplay.innerText = "> ATTEMPTING_HANDSHAKE...";
-        statusDisplay.style.color = "#ffffff";
 
         try {
             
+            const payload = JSON.stringify([{ 
+                email: emailValue, 
+                source: 'portfolio_v1' 
+            }]);
+
             const response = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
                 method: 'POST',
                 headers: {
                     'apikey': supabaseKey,
                     'Authorization': `Bearer ${supabaseKey}`,
                     'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
+                    'Prefer': 'return=minimal' 
                 },
-                body: JSON.stringify([{
-                    email: emailValue,
-                    source: 'portfolio_v1'
-                }])
+                body: payload
             });
 
             if (response.ok) {
-                
                 console.log("> SIGNAL_STAKE_SUCCESS");
-                statusDisplay.innerHTML = `
-                    <span style="color: #00ff41">> SIGNAL_RECEIVED.</span><br>
-                    <span style="color: #ffffff; font-size: 0.8rem; opacity: 0.8;">> CHECK_INBOX_FOR_ENCRYPTION_KEY</span>
-                `;
+                statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
                 document.querySelector('.waitlist-section').classList.add('success-pulse');
                 waitlistForm.style.opacity = "0.3";
                 waitlistForm.style.pointerEvents = "none";
                 submitBtn.innerText = "KEY_STORED";
             } else {
-              
-                const errorData = await response.json();
-                console.error("> DB_ERROR:", errorData.message);
+                
+                const errorText = await response.text();
+                console.error("> DB_REJECTION_REASON:", errorText);
                 statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
                 statusDisplay.style.color = "#ff3e3e";
-                submitBtn.innerText = "STRIKE_KEY";
                 submitBtn.disabled = false;
+                submitBtn.innerText = "STRIKE_KEY";
             }
         } catch (err) {
             console.error("> SYSTEM_FAULT:", err);
-            statusDisplay.innerText = "> ERROR: UNKNOWN_FAULT";
-            submitBtn.innerText = "STRIKE_KEY";
+            statusDisplay.innerText = "> ERROR: OFFLINE_TIMEOUT";
             submitBtn.disabled = false;
         }
     });
 }
-
 
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
