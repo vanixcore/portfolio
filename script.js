@@ -94,10 +94,10 @@ if (waitlistForm) {
                     'Content-Type': 'application/json',
                     'Prefer': 'return=minimal'
                 },
-                body: JSON.stringify({
+                body: JSON.stringify([{
                     email: emailValue,
                     source: 'portfolio_v1'
-                })
+                }])
             });
 
             if (response.ok) {
