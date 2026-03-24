@@ -78,7 +78,7 @@ if (waitlistForm) {
         const submitBtn = waitlistForm.querySelector('button');
         const emailValue = emailInput.value.trim();
 
-        if (!emailValue || !emailValue.includes('@')) {
+        if (!emailValue.includes('@')) {
             statusDisplay.innerText = "> ERROR: SIGNAL_INVALID";
             statusDisplay.style.color = "#ff3e3e";
             return;
@@ -89,37 +89,23 @@ if (waitlistForm) {
         statusDisplay.style.color = "#ffffff";
 
         try {
-            const { error } = await _supabase
+            await _supabase
                 .from('waitlist')
                 .insert([{ 
                     email: emailValue, 
                     source: 'portfolio_v1' 
                 }]);
+            statusDisplay.innerHTML = `
+                <span style="color: #00ff41">> SIGNAL_RECEIVED.</span><br>
+                <span style="color: #ffffff">> ACCESS_KEY_PENDING...</span>
+            `;
+            document.querySelector('.waitlist-section').classList.add('success-pulse');
+            waitlistForm.style.opacity = "0.3";
+            waitlistForm.style.pointerEvents = "none";
+            submitBtn.innerText = "KEY_STORED";
 
-            if (error) {
-                if (error.code === '23505') {
-                    statusDisplay.innerText = "> ERROR: SIGNAL_ALREADY_STORED";
-                    statusDisplay.style.color = "var(--accent)";
-                } else {
-                    statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
-                    statusDisplay.style.color = "#ff3e3e";
-                    submitBtn.innerText = "STRIKE_KEY";
-                    submitBtn.disabled = false;
-                }
-            } else {
-                statusDisplay.innerHTML = `
-                    <span style="color: var(--accent)">> SIGNAL_RECEIVED.</span><br>
-                    <span style="color: #ffffff">> ACCESS_KEY_PENDING...</span><br>
-                    <span style="font-size: 0.8rem; opacity: 0.6; display: block; margin-top: 10px;">
-                        Welcome to the Vani Jha infrastructure.
-                    </span>
-                `;
-                document.querySelector('.waitlist-section').classList.add('success-pulse');
-                waitlistForm.style.opacity = "0.3";
-                waitlistForm.style.pointerEvents = "none";
-                submitBtn.innerText = "KEY_STORED"; 
-            }
         } catch (err) {
+            console.error(err);
             statusDisplay.innerText = "> ERROR: SYSTEM_FAULT";
             statusDisplay.style.color = "#ff3e3e";
             submitBtn.innerText = "STRIKE_KEY";
@@ -127,9 +113,6 @@ if (waitlistForm) {
         }
     });
 }
-
-
-
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
     logLines.forEach((line, index) => {
