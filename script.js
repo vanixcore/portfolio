@@ -70,6 +70,7 @@ async function loadProjects() {
 }
 const waitlistForm = document.querySelector('#waitlist-form');
 const statusDisplay = document.querySelector('.waitlist-section p');
+
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -84,25 +85,24 @@ if (waitlistForm) {
         statusDisplay.style.color = "#ffffff";
 
         try {
-           
-            const { error, status } = await _supabase
-                .from('waitlist')
-                .insert({ 
-                    email: emailValue, 
-                    source: 'portfolio_v1' 
-                });
+            
+            const response = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
+                method: 'POST',
+                headers: {
+                    'apikey': supabaseKey,
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    email: emailValue,
+                    source: 'portfolio_v1'
+                })
+            });
 
-            console.log("> DB_STATUS:", status);
-
-            if (error) {
-                console.error("> DB_ERROR:", error.message);
-                statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
-                statusDisplay.style.color = "#ff3e3e";
-                submitBtn.innerText = "STRIKE_KEY";
-                submitBtn.disabled = false;
-            } else {
+            if (response.ok) {
                 
-                console.log("> SIGNAL_SUCCESS");
+                console.log("> SIGNAL_STAKE_SUCCESS");
                 statusDisplay.innerHTML = `
                     <span style="color: #00ff41">> SIGNAL_RECEIVED.</span><br>
                     <span style="color: #ffffff; font-size: 0.8rem; opacity: 0.8;">> CHECK_INBOX_FOR_ENCRYPTION_KEY</span>
@@ -111,6 +111,14 @@ if (waitlistForm) {
                 waitlistForm.style.opacity = "0.3";
                 waitlistForm.style.pointerEvents = "none";
                 submitBtn.innerText = "KEY_STORED";
+            } else {
+              
+                const errorData = await response.json();
+                console.error("> DB_ERROR:", errorData.message);
+                statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
+                statusDisplay.style.color = "#ff3e3e";
+                submitBtn.innerText = "STRIKE_KEY";
+                submitBtn.disabled = false;
             }
         } catch (err) {
             console.error("> SYSTEM_FAULT:", err);
@@ -120,6 +128,8 @@ if (waitlistForm) {
         }
     });
 }
+
+
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
     logLines.forEach((line, index) => {
