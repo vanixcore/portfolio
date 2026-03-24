@@ -70,7 +70,6 @@ async function loadProjects() {
 }
 const waitlistForm = document.querySelector('#waitlist-form');
 const statusDisplay = document.querySelector('.waitlist-section p');
-
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -121,8 +120,6 @@ if (waitlistForm) {
         }
     });
 }
-
-
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
     logLines.forEach((line, index) => {
