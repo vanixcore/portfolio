@@ -70,51 +70,56 @@ async function loadProjects() {
 }
 const waitlistForm = document.querySelector('#waitlist-form');
 const statusDisplay = document.querySelector('.waitlist-section p');
-
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const emailInput = waitlistForm.querySelector('input[type="email"]');
         const submitBtn = waitlistForm.querySelector('button');
-        if (!emailInput.value || !emailInput.value.includes('@')) {
+        const emailValue = emailInput.value.trim();
+        if (!emailValue || !emailValue.includes('@')) {
             statusDisplay.innerText = "> ERROR: SIGNAL_INVALID";
             statusDisplay.style.color = "#ff3e3e";
             return;
         }
+
         submitBtn.innerText = "UPLOADING...";
         submitBtn.disabled = true;
         statusDisplay.innerText = "> ATTEMPTING_HANDSHAKE...";
         statusDisplay.style.color = "#ffffff";
 
         try {
-        const { error } = await _supabase
-             .from('waitlist')
-             .insert([
-              { 
-               email: emailInput.value.trim(), 
-               source: 'portfolio_v1' 
-               }
-               ]);
-         if (error) {
-                statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
+            const { error } = await _supabase
+                .from('waitlist')
+                .insert([{ 
+                    email: emailValue, 
+                    source: 'portfolio_v1' 
+                }])
+                .select(); 
+
+            if (error) {
+                if (error.code === '23505') {
+                    statusDisplay.innerText = "> ERROR: SIGNAL_ALREADY_STORED";
+                } else {
+                    statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
+                    console.error("DB_ERROR:", error.message, error.hint);
+                }
                 statusDisplay.style.color = "#ff3e3e";
-                console.error("DB_ERROR:", error.message);
             } else {
                 statusDisplay.innerHTML = `
-                    <span style="color: var(--accent)">> SIGNAL_RECEIVED.</span><br>
+                    <span style="color: #00ff41">> SIGNAL_RECEIVED.</span><br>
                     <span style="color: #ffffff">> ACCESS_KEY_PENDING...</span><br>
                     <span style="font-size: 0.8rem; opacity: 0.6; display: block; margin-top: 10px;">
                         Welcome to the Vani Jha infrastructure.
                     </span>
                 `;
-                statusDisplay.style.color = "var(--accent)";
                 document.querySelector('.waitlist-section').classList.add('success-pulse');
                 waitlistForm.style.opacity = "0.3";
                 waitlistForm.style.pointerEvents = "none";
                 emailInput.value = '';
             }
         } catch (err) {
+            console.error("CATCH_ERROR:", err);
             statusDisplay.innerText = "> ERROR: UNKNOWN_SYSTEM_FAILURE";
             statusDisplay.style.color = "#ff3e3e";
         } finally {
@@ -123,6 +128,8 @@ if (waitlistForm) {
         }
     });
 }
+
+
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
     logLines.forEach((line, index) => {
