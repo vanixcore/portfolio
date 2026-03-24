@@ -83,39 +83,40 @@ if (waitlistForm) {
         statusDisplay.innerText = "> ATTEMPTING_HANDSHAKE...";
 
         try {
-            
-            const payload = JSON.stringify([{ 
-                email: emailValue, 
-                source: 'portfolio_v1' 
-            }]);
+            const { data, error, status } = await _supabase
+                .from('waitlist')
+                .insert([
+                    { 
+                        email: emailValue, 
+                        source: 'portfolio_v1' 
+                    }
+                ])
+                .select(); 
 
-            const response = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
-                method: 'POST',
-                headers: {
-                    'apikey': supabaseKey,
-                    'Authorization': `Bearer ${supabaseKey}`,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal' 
-                },
-                body: payload
-            });
+            console.log("> DB_STATUS:", status);
 
-            if (response.ok) {
-                console.log("> SIGNAL_STAKE_SUCCESS");
-                statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
-                document.querySelector('.waitlist-section').classList.add('success-pulse');
-                waitlistForm.style.opacity = "0.3";
-                waitlistForm.style.pointerEvents = "none";
-                submitBtn.innerText = "KEY_STORED";
-            } else {
+            if (error) {
                 
-                const errorText = await response.text();
-                console.error("> DB_REJECTION_REASON:", errorText);
-                statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
-                statusDisplay.style.color = "#ff3e3e";
-                submitBtn.disabled = false;
-                submitBtn.innerText = "STRIKE_KEY";
+                if (error.code === '23505') {
+                    statusDisplay.innerText = "> SIGNAL_ALREADY_STORED";
+                    statusDisplay.style.color = "#00ff41"; // Treat as success for the user
+                } else {
+                    console.error("> DB_REJECTION:", error.message);
+                    statusDisplay.innerText = "> ERROR: " + error.message;
+                    statusDisplay.style.color = "#ff3e3e";
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "STRIKE_KEY";
+                    return;
+                }
             }
+
+            console.log("> SIGNAL_SUCCESS");
+            statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
+            document.querySelector('.waitlist-section').classList.add('success-pulse');
+            waitlistForm.style.opacity = "0.3";
+            waitlistForm.style.pointerEvents = "none";
+            submitBtn.innerText = "KEY_STORED";
+
         } catch (err) {
             console.error("> SYSTEM_FAULT:", err);
             statusDisplay.innerText = "> ERROR: OFFLINE_TIMEOUT";
@@ -123,6 +124,7 @@ if (waitlistForm) {
         }
     });
 }
+
 
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
