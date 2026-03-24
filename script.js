@@ -77,42 +77,37 @@ if (waitlistForm) {
         const emailInput = waitlistForm.querySelector('input[type="email"]');
         const submitBtn = waitlistForm.querySelector('button');
         const emailValue = emailInput.value.trim();
-
-        if (!emailValue.includes('@')) {
-            statusDisplay.innerText = "> ERROR: SIGNAL_INVALID";
-            statusDisplay.style.color = "#ff3e3e";
-            return;
-        }
-        submitBtn.innerText = "UPLOADING...";
+        submitBtn.innerText = "CONNECTING...";
         submitBtn.disabled = true;
         statusDisplay.innerText = "> ATTEMPTING_HANDSHAKE...";
-        statusDisplay.style.color = "#ffffff";
 
         try {
-            await _supabase
+            const entry = { 
+                email: emailValue, 
+                source: 'portfolio_v1' 
+            };
+
+            const { error } = await _supabase
                 .from('waitlist')
-                .insert([{ 
-                    email: emailValue, 
-                    source: 'portfolio_v1' 
-                }]);
-            statusDisplay.innerHTML = `
-                <span style="color: #00ff41">> SIGNAL_RECEIVED.</span><br>
-                <span style="color: #ffffff">> ACCESS_KEY_PENDING...</span>
-            `;
+                .insert([entry]); 
+       
+            console.log("> SIGNAL_SENT");
+            statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
+           
             document.querySelector('.waitlist-section').classList.add('success-pulse');
             waitlistForm.style.opacity = "0.3";
             waitlistForm.style.pointerEvents = "none";
             submitBtn.innerText = "KEY_STORED";
 
         } catch (err) {
-            console.error(err);
-            statusDisplay.innerText = "> ERROR: SYSTEM_FAULT";
-            statusDisplay.style.color = "#ff3e3e";
-            submitBtn.innerText = "STRIKE_KEY";
+            console.error("> CRITICAL_FAULT:", err);
+            statusDisplay.innerText = "> ERROR: SYSTEM_OFFLINE";
             submitBtn.disabled = false;
+            submitBtn.innerText = "STRIKE_KEY";
         }
     });
 }
+
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
     logLines.forEach((line, index) => {
