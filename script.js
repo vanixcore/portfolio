@@ -70,6 +70,7 @@ async function loadProjects() {
 }
 const waitlistForm = document.querySelector('#waitlist-form');
 const statusDisplay = document.querySelector('.waitlist-section p');
+
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -84,14 +85,15 @@ if (waitlistForm) {
         statusDisplay.style.color = "#ffffff";
 
         try {
-            const { error } = await _supabase
+           
+            const { error, status } = await _supabase
                 .from('waitlist')
-                .insert([
-                    { 
-                        email: emailValue, 
-                        source: 'portfolio_v1' 
-                    }
-                ]);
+                .insert({ 
+                    email: emailValue, 
+                    source: 'portfolio_v1' 
+                });
+
+            console.log("> DB_STATUS:", status);
 
             if (error) {
                 console.error("> DB_ERROR:", error.message);
@@ -102,7 +104,10 @@ if (waitlistForm) {
             } else {
                 
                 console.log("> SIGNAL_SUCCESS");
-                statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
+                statusDisplay.innerHTML = `
+                    <span style="color: #00ff41">> SIGNAL_RECEIVED.</span><br>
+                    <span style="color: #ffffff; font-size: 0.8rem; opacity: 0.8;">> CHECK_INBOX_FOR_ENCRYPTION_KEY</span>
+                `;
                 document.querySelector('.waitlist-section').classList.add('success-pulse');
                 waitlistForm.style.opacity = "0.3";
                 waitlistForm.style.pointerEvents = "none";
@@ -111,6 +116,8 @@ if (waitlistForm) {
         } catch (err) {
             console.error("> SYSTEM_FAULT:", err);
             statusDisplay.innerText = "> ERROR: UNKNOWN_FAULT";
+            submitBtn.innerText = "STRIKE_KEY";
+            submitBtn.disabled = false;
         }
     });
 }
