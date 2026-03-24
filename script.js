@@ -88,14 +88,15 @@ if (waitlistForm) {
         statusDisplay.style.color = "#ffffff";
 
         try {
-            const { error } = await _supabase
-                .from('waitlist')
-                .insert([{ 
-                    email: emailInput.value, 
-                    source: 'portfolio_v1' 
-                }]);
-
-            if (error) {
+        const { error } = await _supabase
+             .from('waitlist')
+             .insert([
+              { 
+               email: emailInput.value.trim(), 
+               source: 'portfolio_v1' 
+               }
+               ]);
+         if (error) {
                 statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
                 statusDisplay.style.color = "#ff3e3e";
                 console.error("DB_ERROR:", error.message);
