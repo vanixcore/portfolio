@@ -79,12 +79,19 @@ if (waitlistForm) {
         const emailValue = emailInput.value.trim();
 
         
-        submitBtn.innerText = "KEY_STORED";
         submitBtn.disabled = true;
-        statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
-        document.querySelector('.waitlist-section').classList.add('success-pulse');
-        waitlistForm.style.opacity = "0.3";
-        waitlistForm.style.pointerEvents = "none";
+        submitBtn.innerText = "ENCRYPTING...";
+        statusDisplay.style.color = "#00ff41";
+        statusDisplay.innerText = "> INITIALIZING_SECURE_TUNNEL...";
+
+        
+        setTimeout(() => {
+            submitBtn.innerText = "KEY_STORED";
+            statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED. [ENCRYPTION_COMPLETE]</span>`;
+            document.querySelector('.waitlist-section').classList.add('success-pulse');
+            waitlistForm.style.opacity = "0.3";
+            waitlistForm.style.pointerEvents = "none";
+        }, 1200);
 
         
         try {
@@ -94,7 +101,6 @@ if (waitlistForm) {
                     email: emailValue, 
                     source: 'portfolio_v1' 
                 }]);
-            console.log("> BACKGROUND_SIGNAL_SENT");
         } catch (err) {
             
             console.log("> SILENT_FAIL_SAFE_ACTIVE");
