@@ -78,52 +78,46 @@ if (waitlistForm) {
         const submitBtn = waitlistForm.querySelector('button');
         const emailValue = emailInput.value.trim();
 
-        submitBtn.innerText = "UPLOADING...";
+        submitBtn.innerText = "STRIKING...";
         submitBtn.disabled = true;
-        statusDisplay.innerText = "> ATTEMPTING_HANDSHAKE...";
 
         try {
-            const { data, error, status } = await _supabase
+            
+            const { error } = await _supabase
                 .from('waitlist')
                 .insert([
                     { 
                         email: emailValue, 
                         source: 'portfolio_v1' 
                     }
-                ])
-                .select(); 
-
-            console.log("> DB_STATUS:", status);
+                ]);
 
             if (error) {
                 
-                if (error.code === '23505') {
-                    statusDisplay.innerText = "> SIGNAL_ALREADY_STORED";
-                    statusDisplay.style.color = "#00ff41"; // Treat as success for the user
+                if (error.code === '23505' || error.status === 409) {
+                    console.log("> SIGNAL_REDUNDANT_BUT_SAFE");
+                    statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_ALREADY_RECEIVED.</span>`;
                 } else {
-                    console.error("> DB_REJECTION:", error.message);
-                    statusDisplay.innerText = "> ERROR: " + error.message;
-                    statusDisplay.style.color = "#ff3e3e";
+                    console.error("> DB_ERROR:", error.message);
+                    statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
                     submitBtn.disabled = false;
-                    submitBtn.innerText = "STRIKE_KEY";
                     return;
                 }
+            } else {
+               
+                statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
+                document.querySelector('.waitlist-section').classList.add('success-pulse');
+                waitlistForm.style.opacity = "0.3";
+                waitlistForm.style.pointerEvents = "none";
+                submitBtn.innerText = "KEY_STORED";
             }
-
-            console.log("> SIGNAL_SUCCESS");
-            statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
-            document.querySelector('.waitlist-section').classList.add('success-pulse');
-            waitlistForm.style.opacity = "0.3";
-            waitlistForm.style.pointerEvents = "none";
-            submitBtn.innerText = "KEY_STORED";
-
         } catch (err) {
-            console.error("> SYSTEM_FAULT:", err);
-            statusDisplay.innerText = "> ERROR: OFFLINE_TIMEOUT";
+            console.error("> CRITICAL_SYSTEM_FAULT:", err);
             submitBtn.disabled = false;
         }
     });
 }
+
 
 
 function runSystemLog() {
