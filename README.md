@@ -32,5 +32,5 @@ A real-time terminal simulation that logs environment initialization, database h
 ## 🗄️ DATABASE_SCHEMA
 The backend is optimized for security and speed:
 * **Waitlist Table:** Stores unique identifiers, emails, and origin sources.
-* **Security Configuration:** Row Level Security (RLS) is configured to allow high-signal public data capture [cite: f64e8ba1-9ff7-46cb-b60c-e3684f585f8c, 99682167-01
+* **Security Configuration:** Row Level Security (RLS) is configured to allow high-signal public data capture
 
