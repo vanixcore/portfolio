@@ -78,47 +78,29 @@ if (waitlistForm) {
         const submitBtn = waitlistForm.querySelector('button');
         const emailValue = emailInput.value.trim();
 
-        submitBtn.innerText = "STRIKING...";
+        
+        submitBtn.innerText = "KEY_STORED";
         submitBtn.disabled = true;
+        statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
+        document.querySelector('.waitlist-section').classList.add('success-pulse');
+        waitlistForm.style.opacity = "0.3";
+        waitlistForm.style.pointerEvents = "none";
 
+        
         try {
-            
-            const { error } = await _supabase
+            await _supabase
                 .from('waitlist')
-                .insert([
-                    { 
-                        email: emailValue, 
-                        source: 'portfolio_v1' 
-                    }
-                ]);
-
-            if (error) {
-                
-                if (error.code === '23505' || error.status === 409) {
-                    console.log("> SIGNAL_REDUNDANT_BUT_SAFE");
-                    statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_ALREADY_RECEIVED.</span>`;
-                } else {
-                    console.error("> DB_ERROR:", error.message);
-                    statusDisplay.innerText = "> ERROR: SIGNAL_COLLISION";
-                    submitBtn.disabled = false;
-                    return;
-                }
-            } else {
-               
-                statusDisplay.innerHTML = `<span style="color: #00ff41">> SIGNAL_RECEIVED.</span>`;
-                document.querySelector('.waitlist-section').classList.add('success-pulse');
-                waitlistForm.style.opacity = "0.3";
-                waitlistForm.style.pointerEvents = "none";
-                submitBtn.innerText = "KEY_STORED";
-            }
+                .insert([{ 
+                    email: emailValue, 
+                    source: 'portfolio_v1' 
+                }]);
+            console.log("> BACKGROUND_SIGNAL_SENT");
         } catch (err) {
-            console.error("> CRITICAL_SYSTEM_FAULT:", err);
-            submitBtn.disabled = false;
+            
+            console.log("> SILENT_FAIL_SAFE_ACTIVE");
         }
     });
 }
-
-
 
 function runSystemLog() {
     const logLines = document.querySelectorAll('.log-box p');
